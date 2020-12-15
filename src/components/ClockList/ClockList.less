@@ -1,0 +1,30 @@
+
+
+.clock-list-wrapper {
+    .clock-list {
+        display: flex;
+        flex-wrap: wrap;
+        
+        .add-clock {
+            @width: 220px;
+            position: relative;
+            width: @width;
+            height: @width;
+            margin: 10px;
+            &-icon {
+                // 水平、垂直居中
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 5em;
+                font-weight: 500;
+                color: #666;
+                &:hover {
+                    color: #333;
+                    // color: red;
+                }
+            }
+        }
+    }
+}

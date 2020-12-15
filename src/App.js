@@ -10,14 +10,14 @@ class App extends React.Component {
         super(props);
 
         this.state = {
-            clockList: [1, 2, 3]
+            
         }
     }
 
     render() {
         return (
             <div className="app-container">
-                <ClockList clockList={this.state.clockList} />
+                <ClockList />
             </div>
         )
     }

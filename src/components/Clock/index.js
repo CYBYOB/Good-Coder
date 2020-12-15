@@ -3,6 +3,8 @@
 import React from 'react';
 
 
+import './Clock.less';
+
 class Clock extends React.Component {
     constructor(props) {
         super(props);
@@ -13,9 +15,9 @@ class Clock extends React.Component {
 
         return (
             <div className="clock-item">
-                {
-                    clock
-                }
+                <div>{clock.timeZone}</div>
+                <div className="date">{clock.date}</div>
+                <div>{clock.time}</div>
             </div>
         )
     }
