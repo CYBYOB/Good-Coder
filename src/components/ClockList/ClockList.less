@@ -4,17 +4,23 @@
     .clock-list {
         display: flex;
         flex-wrap: wrap;
+        padding: 10px;
+        background-color: #ebebeb;
         
         .add-clock {
-            @width: 220px;
+            @width: 350px;
             // position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
             width: @width;
             height: @width;
-            border: 3px solid #eee;
+            border: 1px solid #00f;
             margin: 10px;
+            .select-list {
+                width: 120px;
+                margin-right: 10px;
+            }
             &-icon {
                 // // 水平、垂直居中
                 // position: absolute;

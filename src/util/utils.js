@@ -1,6 +1,18 @@
 
 import moment from 'moment';
 
+// 根据时区返回相应的“日期、时间等数据”
+export const getDateTimeByTimeZone = (timeZone) => {
+    const currentMoment = moment();
+    const [date, time] = currentMoment.format('YYYY-MM-DD HH:mm:ss').split(' ');
+
+    return {
+        id: currentMoment.valueOf(),
+        date,
+        time
+    }
+}
+
 // 【均匀】产生 min-max（头尾都含，即 [min, max] ） 的随机数。
 // 使用 ES6 解构、默认参数，异常检测 max >= min ？
 const genRandomNum = (min, max) => {
@@ -9,7 +21,7 @@ const genRandomNum = (min, max) => {
 }
 
 // 实现 syncTime ，“异步”获取时间。const syncTime = () => Promise<TimeResponse>;
-const syncTime = () => {
+export const syncTime = () => {
     return new Promise((resolve, reject) => {
         const MIN = 1;
         const MAX = 10;
