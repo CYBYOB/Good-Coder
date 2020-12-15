@@ -1,11 +1,11 @@
 // 时钟 组件
 
-import React from 'react';
+import React, {Component} from 'react';
 
 
 import './Clock.less';
 
-class Clock extends React.Component {
+class Clock extends Component {
     constructor(props) {
         super(props);
     }
