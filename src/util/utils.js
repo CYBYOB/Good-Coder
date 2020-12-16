@@ -15,17 +15,21 @@ export const getTimeZoneOptions = () => {
     })
 }
 
-// 根据时区返回相应的“日期、时间等数据”
-export const getDateTimeByTimeZone = (timeZone) => {
-    let curMoment = moment();
-    // const [date, time] = curMoment.format('YYYY-MM-DD HH:mm:ss').split(' ');
+// 根据时区返回相应的“日期、时间等数据”。为了复用加上curMoment字段【其存在这说明是通过 syncTime 做的更新】。
+export const getDateTimeByTimeZone = (timeZone, curMoment) => {
+    let resObj = {};
     const timeDiff = timeZoneList.filter(item => item[1] === timeZone)[0][2];
+
+    if (!curMoment) {
+        // 此时需要生成对应的id
+        curMoment = moment();
+        resObj.id = curMoment.valueOf()
+    }
     
     curMoment = curMoment.add(timeDiff, 'hours');
-    return {
-        id: curMoment.valueOf(),
-        curMoment
-    };
+    resObj = Object.assign(resObj, {curMoment});
+    
+    return resObj;
 }
 
 // 【均匀】产生 min-max（头尾都含，即 [min, max] ） 的随机数。

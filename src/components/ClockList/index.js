@@ -3,12 +3,13 @@
 import React, {Component} from 'react';
 import {Select, Button} from 'antd';
 import moment from 'moment';
-import {getDateTimeByTimeZone, getTimeZoneOptions} from '../../util/utils';
+import {getDateTimeByTimeZone, getTimeZoneOptions, syncTime} from '../../util/utils';
 import Clock from '../Clock';
 
 import './ClockList.less';
 
-let i = '';
+let updateClockPerSecond = '';
+let updateClockPerMinute = '';
 
 const timeZoneOptions = getTimeZoneOptions();
 
@@ -48,15 +49,9 @@ class ClockList extends Component {
                 {
                     // id 是生成当前时钟的时间戳，作为Clock组件的key
                     id: 1,
-                    timeZone: '时区1',
+                    timeZone: 'BeiJing',
                     curMoment: moment()
                 },
-                // {
-                //     id: 2,
-                //     timeZone: '时区2',
-                //     date: '2020-11-02',
-                //     time: '01:00:00'
-                // }
             ],
             isSelectTimeZone: false,
             timeZoneValue: '',
@@ -66,6 +61,22 @@ class ClockList extends Component {
         this.onSelectTimeZone = this.onSelectTimeZone.bind(this);
         this.onCancelSelectTimeZone = this.onCancelSelectTimeZone.bind(this);
         this.onDeleteClock = this.onDeleteClock.bind(this);
+        this.updateClockListBySyncTime = this.updateClockListBySyncTime.bind(this);
+        // 2个定时器
+        this.updateClockPerSecond = this.updateClockPerSecond.bind(this);
+        this.updateClockPerMinute= this.updateClockPerMinute.bind(this);
+    }
+
+    // 通过syncTime更新时钟列表
+    updateClockListBySyncTime(syncTime) {
+        let {clockList} = this.state;
+        clockList = clockList.map(item => {
+            const {timeZone} = item;
+            item = Object.assign(item, getDateTimeByTimeZone(timeZone, syncTime));
+            return item;
+        });
+
+        return clockList;
     }
 
     // 点击添加时钟
@@ -84,10 +95,10 @@ class ClockList extends Component {
     }
     // 选中具体的时区
     onSelectTimeZone(timeZone) {
-        debugger
         const {clockList} = this.state;
         // const {id, date, time} = getDateTimeByTimeZone(timeZone);
         const {id, curMoment} = getDateTimeByTimeZone(timeZone);
+        // debugger
         this.setState({
             clockList: [...clockList, {
                     id,
@@ -108,15 +119,16 @@ class ClockList extends Component {
 
     componentWillUnmount() {
         // 清除定时器 —— 每1秒更新时钟。
-        clearInterval(i);
+        clearInterval(updateClockPerSecond);
+        clearInterval(updateClockPerMinute);
     }
 
-    componentDidMount() {
-        i = setInterval(() => {
-            // debugger
-            // 性能优化，为空数组没必要setState
+    updateClockPerSecond() {
+        setInterval(() => {
             const {clockList} = this.state;
             const {length} = clockList;
+
+            // 性能优化，为空数组没必要setState
             if (!length) {
                 return;
             }
@@ -127,9 +139,42 @@ class ClockList extends Component {
                     return item;
                 })
             });
-            // debugger
-        // }, 1000);
-        }, 5000);
+        }, 1000);
+        // }, 5000);
+    }
+    updateClockPerMinute() {
+        setInterval(() => {
+            const {clockList} = this.state;
+            const {length} = clockList;
+            
+            // 性能优化，为空数组没必要setState
+            if (!length) {
+                return;
+            }
+
+            let syncTimeMoment = moment();
+            syncTime().then(res => {
+                syncTimeMoment = res;
+                this.setState({
+                    // clockList: clockList.map(item => {
+                    //     item.curMoment = item.
+                    // })
+                    clockList: this.updateClockListBySyncTime(syncTimeMoment)
+                });
+                
+                debugger
+                clearInterval(updateClockPerSecond);
+                clearInterval(updateClockPerMinute);
+            }).catch(() => {
+                // 静默失败，所以啥也不用做
+            });
+        // }, 60 * 1000);
+        }, 5 * 1000);
+    }
+    componentDidMount() {
+        updateClockPerSecond = this.updateClockPerSecond();
+
+        updateClockPerMinute = this.updateClockPerMinute();
     }
 
     render() {
