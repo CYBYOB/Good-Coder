@@ -3,39 +3,41 @@
 import React, {Component} from 'react';
 import {Select, Button} from 'antd';
 import moment from 'moment';
-import {getDateTimeByTimeZone} from '../../util/utils';
+import {getDateTimeByTimeZone, getTimeZoneOptions} from '../../util/utils';
 import Clock from '../Clock';
 
 import './ClockList.less';
 
-const { Option } = Select;
+let i = '';
 
-const options = [
-    {
-        label: '北京',
-        value: 'BeiJing',
-    },
-    {
-        label: '伦敦',
-        value: 'London',
-    },
-    // {
-    //     label: '纽约',
-    //     value: 'Newyork',
-    // },
-    // {
-    //     label: '悉尼',
-    //     value: 'Sydney',
-    // },
-    // {
-    //     label: '东京',
-    //     value: 'Tokyo',
-    // },
-    // {
-    //     label: '巴黎',
-    //     value: 'Paris',
-    // },
-];
+const timeZoneOptions = getTimeZoneOptions();
+
+// const timeZoneOptions = [
+//     {
+//         label: '北京',
+//         value: 'BeiJing',
+//     },
+//     {
+//         label: '伦敦',
+//         value: 'London',
+//     },
+//     // {
+//     //     label: '纽约',
+//     //     value: 'Newyork',
+//     // },
+//     // {
+//     //     label: '悉尼',
+//     //     value: 'Sydney',
+//     // },
+//     // {
+//     //     label: '东京',
+//     //     value: 'Tokyo',
+//     // },
+//     // {
+//     //     label: '巴黎',
+//     //     value: 'Paris',
+//     // },
+// ];
 
 class ClockList extends Component {
     constructor(props) {
@@ -47,15 +49,14 @@ class ClockList extends Component {
                     // id 是生成当前时钟的时间戳，作为Clock组件的key
                     id: 1,
                     timeZone: '时区1',
-                    date: '2020-11-01',
-                    time: '01:00:00'
+                    curMoment: moment()
                 },
-                {
-                    id: 2,
-                    timeZone: '时区2',
-                    date: '2020-11-02',
-                    time: '01:00:00'
-                }
+                // {
+                //     id: 2,
+                //     timeZone: '时区2',
+                //     date: '2020-11-02',
+                //     time: '01:00:00'
+                // }
             ],
             isSelectTimeZone: false,
             timeZoneValue: '',
@@ -69,7 +70,6 @@ class ClockList extends Component {
 
     // 点击添加时钟
     onAddClock() {
-        debugger
         this.setState({
             // 当前是否处于 【下拉选择时区】 中
             isSelectTimeZone: true
@@ -86,13 +86,15 @@ class ClockList extends Component {
     onSelectTimeZone(timeZone) {
         debugger
         const {clockList} = this.state;
-        const {id, date, time} = getDateTimeByTimeZone(timeZone);
+        // const {id, date, time} = getDateTimeByTimeZone(timeZone);
+        const {id, curMoment} = getDateTimeByTimeZone(timeZone);
         this.setState({
             clockList: [...clockList, {
                     id,
                     timeZone,
-                    date,
-                    time
+                    // date,
+                    // time
+                    curMoment
                 }],
             isSelectTimeZone: false,
             timeZoneValue: ''
@@ -102,6 +104,32 @@ class ClockList extends Component {
         this.setState({
             isSelectTimeZone: false
         });
+    }
+
+    componentWillUnmount() {
+        // 清除定时器 —— 每1秒更新时钟。
+        clearInterval(i);
+    }
+
+    componentDidMount() {
+        i = setInterval(() => {
+            // debugger
+            // 性能优化，为空数组没必要setState
+            const {clockList} = this.state;
+            const {length} = clockList;
+            if (!length) {
+                return;
+            }
+            
+            this.setState({
+                clockList: clockList.map(item => {
+                    item.curMoment = item.curMoment.add(1, 'seconds')
+                    return item;
+                })
+            });
+            // debugger
+        // }, 1000);
+        }, 5000);
     }
 
     render() {
@@ -120,7 +148,7 @@ class ClockList extends Component {
                     {
                         isSelectTimeZone ?
                             (<div className="add-clock">
-                                <Select className="select-list" value={timeZoneValue} options={options} 
+                                <Select className="select-list" value={timeZoneValue} options={timeZoneOptions} 
                                     onSelect={this.onSelectTimeZone}>
                                 </Select>
                                 <Button onClick={this.onCancelSelectTimeZone}>取消</Button>

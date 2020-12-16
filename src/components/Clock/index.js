@@ -7,12 +7,16 @@ import './Clock.less';
 class Clock extends Component {
     constructor(props) {
         super(props);
+        // this.state = {
+        //     curMoment:  props.clock.curMoment
+        // }
     }
 
     render() {
         const {clock, onDeleteClock} = this.props;
-        const {id, timeZone, date, time} = clock;
-
+        const {id, timeZone, curMoment} = clock;
+        const [date, time] = curMoment.format('YYYY-MM-DD HH:mm:ss').split(' ');
+        
         return (
             <div className="clock-item">
                 {/* hover状态下，右上角的 x 。控制显隐，visibility 比 display 性能好 */}

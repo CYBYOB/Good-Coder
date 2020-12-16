@@ -1,16 +1,31 @@
 
 import moment from 'moment';
 
+export const timeZoneList = [
+    // label展示给用户的、value是程序使用的【label、value进行分离、解耦】；timeDiff计算差多少个小时，如 -1、+1（即1）。
+    // [label, value, timeDiff],
+    ['北京', 'BeiJing', 0],
+    ['伦敦', 'London', -13]
+]
+
+export const getTimeZoneOptions = () => {
+    return timeZoneList.map(item => {
+        const [label, value] = item;
+        return {label, value};
+    })
+}
+
 // 根据时区返回相应的“日期、时间等数据”
 export const getDateTimeByTimeZone = (timeZone) => {
-    const currentMoment = moment();
-    const [date, time] = currentMoment.format('YYYY-MM-DD HH:mm:ss').split(' ');
-
+    let curMoment = moment();
+    // const [date, time] = curMoment.format('YYYY-MM-DD HH:mm:ss').split(' ');
+    const timeDiff = timeZoneList.filter(item => item[1] === timeZone)[0][2];
+    
+    curMoment = curMoment.add(timeDiff, 'hours');
     return {
-        id: currentMoment.valueOf(),
-        date,
-        time
-    }
+        id: curMoment.valueOf(),
+        curMoment
+    };
 }
 
 // 【均匀】产生 min-max（头尾都含，即 [min, max] ） 的随机数。
