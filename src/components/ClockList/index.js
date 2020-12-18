@@ -13,46 +13,20 @@ let updateClockPerMinute = '';
 
 const timeZoneOptions = getTimeZoneOptions();
 
-// const timeZoneOptions = [
-//     {
-//         label: '北京',
-//         value: 'BeiJing',
-//     },
-//     {
-//         label: '伦敦',
-//         value: 'London',
-//     },
-//     // {
-//     //     label: '纽约',
-//     //     value: 'Newyork',
-//     // },
-//     // {
-//     //     label: '悉尼',
-//     //     value: 'Sydney',
-//     // },
-//     // {
-//     //     label: '东京',
-//     //     value: 'Tokyo',
-//     // },
-//     // {
-//     //     label: '巴黎',
-//     //     value: 'Paris',
-//     // },
-// ];
-
 class ClockList extends Component {
     constructor(props) {
         super(props);
+        let clockList = JSON.parse(localStorage.getItem('clockList'));
+
+        if (clockList && clockList.length) {
+            clockList = clockList.map(item => {
+                item.curMoment = moment(item.curMoment);
+                return item;
+            });
+        }
+
         this.state = {
-            // Mock数据
-            clockList: [
-                // {
-                //     // id 是生成当前时钟的时间戳，作为Clock组件的key
-                //     id: 1,
-                //     timeZone: 'BeiJing',
-                //     curMoment: moment()
-                // }
-            ],
+            clockList: clockList || [],
             isSelectTimeZone: false,
             timeZoneValue: '',
         }
@@ -88,33 +62,35 @@ class ClockList extends Component {
     }
     // 点击删除时钟
     onDeleteClock(id) {
-        const {clockList} = this.state;
+        let {clockList} = this.state;
+
+        clockList = clockList.filter(item => item.id !== id)
         this.setState({
-            clockList: clockList.filter(item => item.id !== id)
+            clockList,
         });
+
+        // localStorage持久化
+        localStorage.setItem('clockList', JSON.stringify(clockList));
     }
     // 选中具体的时区
     onSelectTimeZone(timeZone) {
-        const {clockList} = this.state;
-        // const {id, date, time} = getDateTimeByTimeZone(timeZone);
+        let {clockList} = this.state;
         const {id, curMoment} = getDateTimeByTimeZone(timeZone);
         // debugger
+
+        clockList = [...clockList, {id, timeZone, curMoment}];
         this.setState({
-            clockList: [...clockList, {
-                    id,
-                    timeZone,
-                    // date,
-                    // time
-                    curMoment
-                }],
+            clockList,
             isSelectTimeZone: false,
             timeZoneValue: ''
-        // }, () => console.log(this.state));
         });
 
         // 清除定时器,很关键
         clearInterval(updateClockPerSecond);
         clearInterval(updateClockPerMinute);
+
+        // localStorage持久化
+        localStorage.setItem('clockList', JSON.stringify(clockList));
     }
     onCancelSelectTimeZone() {
         this.setState({
@@ -161,13 +137,9 @@ class ClockList extends Component {
             syncTime().then(res => {
                 syncTimeMoment = res;
                 this.setState({
-                    // clockList: clockList.map(item => {
-                    //     item.curMoment = item.
-                    // })
                     clockList: this.updateClockListBySyncTime(syncTimeMoment)
                 });
                 
-                // debugger
                 clearInterval(updateClockPerSecond);
                 clearInterval(updateClockPerMinute);
             }).catch(() => {
