@@ -91,9 +91,8 @@ class ClockList extends Component {
             timeZoneValue: ''
         });
 
-        // 清除定时器,很关键
-        clearInterval(updateClockPerSecond);
-        clearInterval(updateClockPerMinute);
+        // clearInterval(updateClockPerSecond);
+        // clearInterval(updateClockPerMinute);
 
         // localStorage持久化
         localStorage.setItem('clockList', JSON.stringify(clockList));
@@ -167,17 +166,10 @@ class ClockList extends Component {
         // }, 5 * 1000);
     }
     componentDidMount() {
-        // if (!updateClockPerSecond) {
-        //     updateClockPerSecond = this.updateClockPerSecond();
-        // }
-        // if (!updateClockPerMinute) {
-        //     updateClockPerMinute = this.updateClockPerMinute();
-        // }
         clearInterval(updateClockPerSecond);
         clearInterval(updateClockPerMinute);
 
         updateClockPerSecond = this.updateClockPerSecond();
-
         updateClockPerMinute = this.updateClockPerMinute();
     }
 
