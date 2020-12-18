@@ -5,13 +5,6 @@ import React, {Component} from 'react';
 import './Clock.less';
 
 class Clock extends Component {
-    constructor(props) {
-        super(props);
-        // this.state = {
-        //     curMoment:  props.clock.curMoment
-        // }
-    }
-
     render() {
         const {clock, onDeleteClock} = this.props;
         const {id, timeZone, curMoment} = clock;

@@ -83,7 +83,6 @@ class ClockList extends Component {
     onSelectTimeZone(timeZone) {
         let {clockList} = this.state;
         const {id, curMoment} = getDateTimeByTimeZone(timeZone);
-        // debugger
 
         clockList = [...clockList, {id, timeZone, curMoment}];
         this.setState({
@@ -111,7 +110,6 @@ class ClockList extends Component {
         // 监听 localStorage 变化，以更新各处Tab标签页的时钟列表
         window.addEventListener("storage", function (e) {
             const clockList =  formatClockList(e.newValue);
-            debugger
             that.setState({
                 clockList
             })
