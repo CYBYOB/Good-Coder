@@ -4,10 +4,15 @@ import moment from 'moment';
 export const timeZoneList = [
     // label展示给用户的、value是程序使用的【label、value进行分离、解耦】；timeDiff计算差多少个小时，如 -1、+1（即1）。
     // [label, value, timeDiff],
-    ['北京', 'BeiJing', 0],
-    ['伦敦', 'London', -13]
-]
+    ['北京', '北京', 0],
+    ['伦敦', '伦敦', -8],
+    ['纽约', '纽约', -13],
+    ['巴黎', '巴黎', -7],
+    ['东京', '东京', +1],
+    ['悉尼', '悉尼', +2]
+];
 
+// ClockList组件中，时区下拉框的数据源
 export const getTimeZoneOptions = () => {
     return timeZoneList.map(item => {
         const [label, value] = item;

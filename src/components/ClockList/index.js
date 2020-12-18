@@ -134,7 +134,7 @@ class ClockList extends Component {
             
             this.setState({
                 clockList: clockList.map(item => {
-                    item.curMoment = item.curMoment.add(1, 'seconds')
+                    item.curMoment = item.curMoment.add(1, 'seconds');
                     return item;
                 })
             });
@@ -163,8 +163,8 @@ class ClockList extends Component {
             }).catch(() => {
                 // 静默失败，所以啥也不用做
             });
-        // }, 60 * 1000);
-        }, 5 * 1000);
+        }, 60 * 1000);
+        // }, 5 * 1000);
     }
     componentDidMount() {
         // if (!updateClockPerSecond) {
@@ -197,7 +197,8 @@ class ClockList extends Component {
                     {
                         isSelectTimeZone ?
                             (<div className="add-clock">
-                                <Select className="select-list" value={timeZoneValue} options={timeZoneOptions} 
+                                <Select className="select-list" 
+                                    value={timeZoneValue} options={timeZoneOptions} showSearch allowClear
                                     onSelect={this.onSelectTimeZone}>
                                 </Select>
                                 <Button onClick={this.onCancelSelectTimeZone}>取消</Button>
