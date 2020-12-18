@@ -13,17 +13,24 @@ let updateClockPerMinute = '';
 
 const timeZoneOptions = getTimeZoneOptions();
 
+// 格式化 clockList ，通过“JSON.stringfy序列化”后有些数据会“失真”
+const formatClockList = (clockListPre) => {
+    let clockList = JSON.parse(clockListPre);
+
+    if (clockList && clockList.length) {
+        clockList = clockList.map(item => {
+            item.curMoment = moment(item.curMoment);
+            return item;
+        });
+    }
+    return clockList;
+}
+
 class ClockList extends Component {
     constructor(props) {
         super(props);
-        let clockList = JSON.parse(localStorage.getItem('clockList'));
-
-        if (clockList && clockList.length) {
-            clockList = clockList.map(item => {
-                item.curMoment = moment(item.curMoment);
-                return item;
-            });
-        }
+        let clockListPre = localStorage.getItem('clockList');
+        const clockList = formatClockList(clockListPre);
 
         this.state = {
             clockList: clockList || [],
@@ -95,6 +102,19 @@ class ClockList extends Component {
     onCancelSelectTimeZone() {
         this.setState({
             isSelectTimeZone: false
+        });
+    }
+
+    componentWillMount() {
+        let that = this;
+
+        // 监听 localStorage 变化，以更新各处Tab标签页的时钟列表
+        window.addEventListener("storage", function (e) {
+            const clockList =  formatClockList(e.newValue);
+            debugger
+            that.setState({
+                clockList
+            })
         });
     }
 
