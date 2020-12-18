@@ -46,12 +46,12 @@ class ClockList extends Component {
         this.state = {
             // Mock数据
             clockList: [
-                {
-                    // id 是生成当前时钟的时间戳，作为Clock组件的key
-                    id: 1,
-                    timeZone: 'BeiJing',
-                    curMoment: moment()
-                },
+                // {
+                //     // id 是生成当前时钟的时间戳，作为Clock组件的key
+                //     id: 1,
+                //     timeZone: 'BeiJing',
+                //     curMoment: moment()
+                // }
             ],
             isSelectTimeZone: false,
             timeZoneValue: '',
@@ -109,7 +109,12 @@ class ClockList extends Component {
                 }],
             isSelectTimeZone: false,
             timeZoneValue: ''
-        }, () => console.log(this.state))
+        // }, () => console.log(this.state));
+        });
+
+        // 清除定时器,很关键
+        clearInterval(updateClockPerSecond);
+        clearInterval(updateClockPerMinute);
     }
     onCancelSelectTimeZone() {
         this.setState({
@@ -118,7 +123,7 @@ class ClockList extends Component {
     }
 
     componentWillUnmount() {
-        // 清除定时器 —— 每1秒更新时钟。
+        // 清除相关的定时器。
         clearInterval(updateClockPerSecond);
         clearInterval(updateClockPerMinute);
     }
@@ -162,7 +167,7 @@ class ClockList extends Component {
                     clockList: this.updateClockListBySyncTime(syncTimeMoment)
                 });
                 
-                debugger
+                // debugger
                 clearInterval(updateClockPerSecond);
                 clearInterval(updateClockPerMinute);
             }).catch(() => {
@@ -172,6 +177,15 @@ class ClockList extends Component {
         }, 5 * 1000);
     }
     componentDidMount() {
+        // if (!updateClockPerSecond) {
+        //     updateClockPerSecond = this.updateClockPerSecond();
+        // }
+        // if (!updateClockPerMinute) {
+        //     updateClockPerMinute = this.updateClockPerMinute();
+        // }
+        clearInterval(updateClockPerSecond);
+        clearInterval(updateClockPerMinute);
+
         updateClockPerSecond = this.updateClockPerSecond();
 
         updateClockPerMinute = this.updateClockPerMinute();
