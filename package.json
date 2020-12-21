@@ -1,0 +1,34 @@
+{
+  "name": "chenyuanbao",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "echo \"Please implement your build script and modify scripts.build section in package.json\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://chenyuanbao@icode.baidu.com:8235/baidu/goodcoder/chenyuanbao"
+  },
+  "author": "chenyuanbao",
+  "license": "UNLICENSED",
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": "eslint",
+    "*.{css,less,scss,styl}": "stylelint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "devDependencies": {
+      "@ecomfe/eslint-config": "^4.0.0",
+      "@ecomfe/stylelint-config": "^1.0.0",
+      "babel-eslint": "^10.0.0",
+      "eslint-plugin-babel": "^5.0.0",
+      "eslint": "^7.0.0",
+      "husky": "^4.0.0",
+      "lint-staged": "^10.0.0",
+      "stylelint": "^13.0.0"
+  }
+}
