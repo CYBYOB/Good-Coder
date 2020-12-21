@@ -1,5 +1,4 @@
 // 时钟列表 组件
-
 import React, {Component} from 'react';
 import {Select, Button} from 'antd';
 import moment from 'moment';
@@ -8,6 +7,7 @@ import Clock from '../Clock';
 
 import './ClockList.less';
 
+// 2个定时器（interval）
 let updateClockPerSecond = '';
 let updateClockPerMinute = '';
 
@@ -91,9 +91,6 @@ class ClockList extends Component {
             timeZoneValue: ''
         });
 
-        // clearInterval(updateClockPerSecond);
-        // clearInterval(updateClockPerMinute);
-
         // localStorage持久化
         localStorage.setItem('clockList', JSON.stringify(clockList));
     }
@@ -137,8 +134,7 @@ class ClockList extends Component {
                     return item;
                 })
             });
-        }, 1000);
-        // }, 5000);
+        }, 1 * 1000);
     }
     updateClockPerMinute() {
         setInterval(() => {
@@ -163,7 +159,6 @@ class ClockList extends Component {
                 // 静默失败，所以啥也不用做
             });
         }, 60 * 1000);
-        // }, 5 * 1000);
     }
     componentDidMount() {
         clearInterval(updateClockPerSecond);

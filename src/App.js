@@ -1,6 +1,4 @@
 import React, {Component} from 'react';
-// import { Button } from 'antd';
-
 import ClockList from './components/ClockList';
 
 import './App.css';
@@ -10,7 +8,6 @@ class App extends Component {
         super(props);
 
         this.state = {
-            
         }
     }
 
