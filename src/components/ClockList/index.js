@@ -42,6 +42,8 @@ class ClockList extends Component {
         // 2个定时器
         this.updateClockPerSecond = this.updateClockPerSecond.bind(this);
         this.updateClockPerMinute= this.updateClockPerMinute.bind(this);
+        // storage相关的事件监听处理
+        this.storageListenerHandler = this.storageListenerHandler.bind(this);
     }
 
     // 通过syncTime值返回最新的时钟列表数据
@@ -96,22 +98,24 @@ class ClockList extends Component {
         });
     }
 
-    componentWillMount() {
-        let that = this;
+    storageListenerHandler(e) {
+        const clockList =  formatClockList(e.newValue);
 
-        // 监听 localStorage 变化，以更新各处Tab标签页的时钟列表
-        window.addEventListener("storage", function (e) {
-            const clockList =  formatClockList(e.newValue);
-            that.setState({
-                clockList
-            })
+        this.setState({
+            clockList
         });
     }
 
+    componentWillMount() {
+        // 监听 localStorage 变化，以更新各处Tab标签页的时钟列表
+        window.addEventListener("storage", this.storageListenerHandler);
+    }
+
     componentWillUnmount() {
-        // 清除相关的定时器。
+        // 清除相关的定时器与监听事件。
         clearInterval(this.intervalSecond);
         clearInterval(this.intervalMinute);
+        window.removeEventListener("storage", this.storageListenerHandler);
     }
 
     updateClockPerSecond() {
@@ -152,8 +156,7 @@ class ClockList extends Component {
             }).catch(() => {
                 // 静默失败，所以啥也不用做
             });
-        // }, 60 * 1000);
-        }, 3 * 1000);
+        }, 60 * 1000);
 
         return intervalMinuteID;
     }
@@ -169,7 +172,7 @@ class ClockList extends Component {
             <div className="clock-list-wrapper">
                 <div className="clock-list">
                     {
-                        clockList.map((clock, index) => {
+                        clockList.map((clock) => {
                             return <Clock clock={clock} key={clock.id} onDeleteClock={this.onDeleteClock}/>
                         })
                     }
