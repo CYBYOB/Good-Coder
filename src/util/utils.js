@@ -1,5 +1,6 @@
 
 import moment from 'moment';
+import _ from 'lodash';
 
 export const timeZoneList = [
     // label展示给用户的、value是程序使用的【label、value进行分离、解耦】；timeDiff计算差多少个小时，如 -1、+1（即1）。
@@ -30,10 +31,11 @@ export const getDateTimeByTimeZone = (timeZone, curMoment) => {
         curMoment = moment();
         resObj.id = curMoment.valueOf()
     }
-    
-    curMoment = curMoment.add(timeDiff, 'hours');
-    resObj = Object.assign(resObj, {curMoment});
-    
+
+    let tempCurMoment = _.cloneDeep(curMoment);
+    tempCurMoment = tempCurMoment.add(timeDiff, 'hours');
+    resObj = Object.assign(resObj, {curMoment: tempCurMoment});
+
     return resObj;
 }
 

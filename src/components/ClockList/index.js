@@ -7,10 +7,6 @@ import Clock from '../Clock';
 
 import './ClockList.less';
 
-// 2个定时器（interval）
-let updateClockPerSecond = '';
-let updateClockPerMinute = '';
-
 const timeZoneOptions = getTimeZoneOptions();
 
 // 格式化 clockList ，通过“JSON.stringfy序列化”后有些数据会“失真”
@@ -42,14 +38,14 @@ class ClockList extends Component {
         this.onSelectTimeZone = this.onSelectTimeZone.bind(this);
         this.onCancelSelectTimeZone = this.onCancelSelectTimeZone.bind(this);
         this.onDeleteClock = this.onDeleteClock.bind(this);
-        this.updateClockListBySyncTime = this.updateClockListBySyncTime.bind(this);
+        this.getClockListBySyncTime = this.getClockListBySyncTime.bind(this);
         // 2个定时器
         this.updateClockPerSecond = this.updateClockPerSecond.bind(this);
         this.updateClockPerMinute= this.updateClockPerMinute.bind(this);
     }
 
-    // 通过syncTime更新时钟列表
-    updateClockListBySyncTime(syncTime) {
+    // 通过syncTime值返回最新的时钟列表数据
+    getClockListBySyncTime(syncTime) {
         let {clockList} = this.state;
         clockList = clockList.map(item => {
             const {timeZone} = item;
@@ -114,12 +110,12 @@ class ClockList extends Component {
 
     componentWillUnmount() {
         // 清除相关的定时器。
-        clearInterval(updateClockPerSecond);
-        clearInterval(updateClockPerMinute);
+        clearInterval(this.intervalSecond);
+        clearInterval(this.intervalMinute);
     }
 
     updateClockPerSecond() {
-        setInterval(() => {
+        const intervalSecondID =  setInterval(() => {
             const {clockList} = this.state;
             const {length} = clockList;
 
@@ -135,9 +131,11 @@ class ClockList extends Component {
                 })
             });
         }, 1 * 1000);
+
+        return intervalSecondID;
     }
     updateClockPerMinute() {
-        setInterval(() => {
+        const intervalMinuteID = setInterval(() => {
             const {clockList} = this.state;
             const {length} = clockList;
             
@@ -146,26 +144,22 @@ class ClockList extends Component {
                 return;
             }
 
-            let syncTimeMoment = moment();
             syncTime().then(res => {
-                syncTimeMoment = res;
+                const clockList = this.getClockListBySyncTime(res);
                 this.setState({
-                    clockList: this.updateClockListBySyncTime(syncTimeMoment)
+                    clockList
                 });
-                
-                clearInterval(updateClockPerSecond);
-                clearInterval(updateClockPerMinute);
             }).catch(() => {
                 // 静默失败，所以啥也不用做
             });
-        }, 60 * 1000);
+        // }, 60 * 1000);
+        }, 3 * 1000);
+
+        return intervalMinuteID;
     }
     componentDidMount() {
-        clearInterval(updateClockPerSecond);
-        clearInterval(updateClockPerMinute);
-
-        updateClockPerSecond = this.updateClockPerSecond();
-        updateClockPerMinute = this.updateClockPerMinute();
+        this.intervalSecond = this.updateClockPerSecond();
+        this.intervalMinute = this.updateClockPerMinute();
     }
 
     render() {
