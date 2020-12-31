@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {Select, Button} from 'antd';
 import moment from 'moment';
-import {getDateTimeByTimeZone, getTimeZoneOptions, syncTime} from '../../util/utils';
+import {getDateTimeByTimeZone, getTimeZoneOptions, SECONDS, syncTime} from '../../util/utils';
 import Clock from '../Clock';
 
 import './ClockList.less';
@@ -130,7 +130,7 @@ class ClockList extends Component {
             
             this.setState({
                 clockList: clockList.map(item => {
-                    item.curMoment = item.curMoment.add(1, 'seconds');
+                    item.curMoment = item.curMoment.add(1, SECONDS);
                     return item;
                 })
             });

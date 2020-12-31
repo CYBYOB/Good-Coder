@@ -12,7 +12,7 @@ class Clock extends Component {
         return (
             <div className="clock-item">
                 {/* hover状态下，右上角的 x 。控制显隐，visibility 比 display 性能好 */}
-                <div className="delete-icon" style={ {visibility: 'hidden'} } onClick={ () => onDeleteClock(id) }>X</div>
+                <div className="delete-icon" onClick={ () => onDeleteClock(id) }>X</div>
                 <div>{timeZone}</div>
                 <div className="date">{date}</div>
                 <div>{time}</div>

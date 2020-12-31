@@ -2,6 +2,11 @@
 import moment from 'moment';
 import _ from 'lodash';
 
+// moment.js 相关的常量字符串
+export const SECONDS = 'seconds';
+export const HOURS = 'hours';
+export const DAYS = 'days';
+
 export const timeZoneList = [
     // label展示给用户的、value是程序使用的【label、value进行分离、解耦】；timeDiff计算差多少个小时，如 -1、+1（即1）。
     // [label, value, timeDiff],
@@ -33,7 +38,7 @@ export const getDateTimeByTimeZone = (timeZone, curMoment) => {
     }
 
     let tempCurMoment = _.cloneDeep(curMoment);
-    tempCurMoment = tempCurMoment.add(timeDiff, 'hours');
+    tempCurMoment = tempCurMoment.add(timeDiff, HOURS);
     resObj = Object.assign(resObj, {curMoment: tempCurMoment});
 
     return resObj;
@@ -57,7 +62,9 @@ export const syncTime = () => {
             reject('我是message，错误原因：xxx');
         } else {
             setTimeout(() => {
-                resolve(moment());
+                // 随机产生秒级的【假误差】，范围是 [-1, 1] 。
+                const randomSeconds = genRandomNum(-1, 1);
+                resolve(moment().add(randomSeconds, SECONDS));
             }, TIME_OF_DELAY);
         }
     });
