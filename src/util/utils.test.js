@@ -18,7 +18,7 @@ test('测试genRandomNum函数', () => {
   const min = 1;
   const max = 10;
 
-  for (let i=1; i< 1000; i++) {
+  for (let i=0; i< 1000; i++) {
     const res = genRandomNum(min, max);
     expect(res >= min).toBeTruthy();
     expect(res <= max).toBeTruthy();

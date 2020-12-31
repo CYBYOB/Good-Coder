@@ -46,7 +46,8 @@ export const getDateTimeByTimeZone = (timeZone, curMoment) => {
 
 // 【均匀】产生 min-max（头尾都含，即 [min, max] ） 的随机数。
 export const genRandomNum = (min, max) => {
-    const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+    // const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+    const randomNum = _.random(min, max);
     return randomNum;
 }
 
